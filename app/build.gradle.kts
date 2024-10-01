@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.googleServices)
     alias(libs.plugins.crashlytics)
     alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.hiltAndroid)
+    id("kotlin-kapt")
 }
 
 android {
@@ -52,6 +54,10 @@ android {
     }
 }
 
+kapt {
+    correctErrorTypes = true
+}
+
 dependencies {
 
     implementation(platform(libs.firebase.bom))
@@ -59,6 +65,9 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+    implementation(libs.androidx.core.ktx)
 
 
     implementation(libs.androidx.core.ktx)

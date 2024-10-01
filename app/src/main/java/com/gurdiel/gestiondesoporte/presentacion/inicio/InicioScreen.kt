@@ -25,8 +25,6 @@ import com.gurdiel.gestiondesoporte.ui.theme.azulM
 import com.gurdiel.gestiondesoporte.ui.theme.claroGrisM
 import com.gurdiel.gestiondesoporte.ui.theme.oscuroGrisM
 
-
-
 @Composable
 fun InicioScreen(navigateToLogin: ()-> Unit, navigateToRegistro: () -> Unit) {
 
