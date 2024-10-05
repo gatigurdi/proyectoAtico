@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.gurdiel.gestiondesoporte.presentacion.detail.usuario.Administrador
 import com.gurdiel.gestiondesoporte.presentacion.inicio.InicioScreen
 import com.gurdiel.gestiondesoporte.presentacion.login.LoginScreen
 import com.gurdiel.gestiondesoporte.presentacion.registro.RegistroScreen
@@ -20,6 +21,7 @@ fun NavigationWrapper(navHostController: NavHostController) {
         }
         composable("Registro") { RegistroScreen() }
         composable("Login") { LoginScreen() }
+        composable("Administrador") { Administrador()  }
     }
 
 }
