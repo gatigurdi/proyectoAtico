@@ -69,6 +69,7 @@ dependencies {
     kapt(libs.hilt.android.compiler)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.compose.runtime.livedata)
+    implementation(libs.firebaseDatabase)
 
 
     implementation(libs.androidx.core.ktx)
