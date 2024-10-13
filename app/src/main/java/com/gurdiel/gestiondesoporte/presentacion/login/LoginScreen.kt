@@ -6,49 +6,56 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.firebase.auth.FirebaseAuth
 import com.gurdiel.gestiondesoporte.R
 import com.gurdiel.gestiondesoporte.ui.theme.SelectedField
 import com.gurdiel.gestiondesoporte.ui.theme.UnselectedField
+import com.gurdiel.gestiondesoporte.ui.theme.amarilloM
 import com.gurdiel.gestiondesoporte.ui.theme.azulM
 import com.gurdiel.gestiondesoporte.ui.theme.claroGrisM
 import com.gurdiel.gestiondesoporte.ui.theme.oscuroGrisM
 
 @Composable
 fun LoginScreen(
-    loginviewModel: LoginViewModel,
+    loginViewModel: LoginViewModel,
     navigateToAdministrador: () -> Unit
 ) {
 
-    val email :String by loginviewModel.email.observeAsState(initial = "")
-    val password :String by loginviewModel.password.observeAsState(initial = "")
-    val loginEnable: Boolean by loginviewModel.loginEnable.observeAsState(initial = false)
-
-    val focusRequester = remember {
-        FocusRequester()
-    }
+    val email :String by loginViewModel.email.observeAsState(initial = "")
+    val password :String by loginViewModel.password.observeAsState(initial = "")
+    val loginEnable: Boolean by loginViewModel.loginEnable.observeAsState(initial = false)
+    val focusManager = LocalFocusManager.current
+    var showPassword by remember { mutableStateOf(value = false) }
 
 
     Column(
@@ -69,54 +76,116 @@ fun LoginScreen(
 
         Image(
             painter = painterResource(id = R.drawable._logueo),
-            contentDescription = "Presentacion",
+            contentDescription = "Presentation",
             modifier = Modifier
                 .size(150.dp, 150.dp)
                 .padding(vertical = 30.dp)
         )
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(0.1f))
 
         Text(
             text = "Email:",
             color = oscuroGrisM,
             fontSize = 39.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.Start)
         )
         TextField(
-            value = email, onValueChange = { loginviewModel.onLoginChange(it, password) },
-            modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
+            value = email, onValueChange = { loginViewModel.onLoginChange(it, password) },
+            modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = UnselectedField,
-                focusedContainerColor = SelectedField
+                focusedContainerColor = SelectedField,
+                focusedTextColor = Color.White,
+            ),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Email),
+            keyboardActions = KeyboardActions(
+                onNext = {focusManager.moveFocus(FocusDirection.Next)}
             )
         )
-        Spacer(modifier = Modifier.weight(0.5f))
+        Spacer(modifier = Modifier.weight(0.25f))
 
         Text(
             text = "Contraseña:",
             color = oscuroGrisM,
             fontSize = 39.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.Start)
         )
+        //HACER FUERA DE AQUÍ CUANDO TENGA TIEMPO HOSTIA
+        val visualTransformation = if(showPassword){
+            VisualTransformation.None
+        }else{
+            PasswordVisualTransformation()
+        }
+
         TextField(
             value = password,
             modifier = Modifier.fillMaxWidth(),
-            onValueChange = { loginviewModel.onLoginChange(email, it) },
+            onValueChange = { loginViewModel.onLoginChange(email, it) },
             colors = TextFieldDefaults.colors(
                 unfocusedContainerColor = UnselectedField,
-                focusedContainerColor = SelectedField
+                focusedContainerColor = SelectedField,
+                focusedTextColor = Color.White
+            ),
+            trailingIcon = {
+                if (showPassword) {
+                    IconButton(onClick = { showPassword = false }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.visibilityoff),
+                            contentDescription = "hide_password",
+                            tint = amarilloM
+                        )
+                    }
+                } else {
+                    IconButton(
+                        onClick = { showPassword = true }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.visibility),
+                            contentDescription = "hide_password",
+                            tint = amarilloM
+                        )
+                    }
+                }
+            },
+            visualTransformation = visualTransformation,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Password
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = { focusManager.clearFocus() }
             )
         )
-        Spacer(Modifier.height(48.dp))
+//        TextField(
+//            value = password,
+//            modifier = Modifier.fillMaxWidth(),
+//            onValueChange = { loginviewModel.onLoginChange(email, it) },
+//            colors = TextFieldDefaults.colors(
+//                unfocusedContainerColor = UnselectedField,
+//                focusedContainerColor = SelectedField,
+//                focusedTextColor = Color.White,
+//                cursorColor = Color.Transparent,
+//                focusedIndicatorColor = Color.Transparent,
+//                unfocusedIndicatorColor = Color.Transparent
+//            ),
+//            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+//            keyboardActions = KeyboardActions(
+//                onNext = {focusManager.moveFocus(FocusDirection.Next)}
+//            )
+//        )
+        Spacer(modifier = Modifier.weight(0.25f))
 
         Button(
             onClick = {
-                loginviewModel.login(email,password,navigateToAdministrador) },
+                loginViewModel.login(email,password,navigateToAdministrador) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = claroGrisM),
+            colors = ButtonDefaults.buttonColors(containerColor = amarilloM, disabledContainerColor = oscuroGrisM),
             enabled = loginEnable
         ) {
             Text(

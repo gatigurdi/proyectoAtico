@@ -4,23 +4,24 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.google.firebase.auth.FirebaseAuth
-import com.gurdiel.gestiondesoporte.presentacion.detail.usuario.Administrador
+import com.gurdiel.gestiondesoporte.presentacion.detail.administrador.Administrador
 import com.gurdiel.gestiondesoporte.presentacion.inicio.InicioScreen
 import com.gurdiel.gestiondesoporte.presentacion.login.LoginScreen
 import com.gurdiel.gestiondesoporte.presentacion.login.LoginViewModel
 import com.gurdiel.gestiondesoporte.presentacion.registro.RegistroScreen
+import com.gurdiel.gestiondesoporte.presentacion.registro.RegistroViewModel
 
 @Composable
 fun NavigationWrapper(
     navHostController: NavHostController,
     loginViewModel: LoginViewModel,
-    auth: FirebaseAuth,
-
+    registroViewModel: RegistroViewModel
     ) {
     var start= "inicio"
 
-    if(auth.currentUser == null ){
+    //Esto puede venir del login cuando creemos los tres tipos de usuario probamos.
+
+    if(loginViewModel.isLogin()){
         start = "Administrador"
     }
 
@@ -31,8 +32,15 @@ fun NavigationWrapper(
                 navigateToRegistro = { navHostController.navigate("Registro") }
             )
         }
-        composable("Registro") { RegistroScreen() }
-        composable("Login") { LoginScreen(loginViewModel, navigateToAdministrador = { navHostController.navigate("Administrador")}) }
+        composable("Registro") {
+            RegistroScreen(
+                registroViewModel,
+                navigateToLogin = {navHostController.navigate("Login")}) }
+        composable("Login") {
+            LoginScreen(
+                loginViewModel,
+                navigateToAdministrador = { navHostController.navigate("Administrador")}) }
+
         composable("Administrador") { Administrador()  }
     }
 

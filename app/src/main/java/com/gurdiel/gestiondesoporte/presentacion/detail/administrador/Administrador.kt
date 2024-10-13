@@ -1,4 +1,4 @@
-package com.gurdiel.gestiondesoporte.presentacion.detail.usuario
+package com.gurdiel.gestiondesoporte.presentacion.detail.administrador
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text

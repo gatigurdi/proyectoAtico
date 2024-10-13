@@ -2,8 +2,8 @@ package com.gurdiel.gestiondesoporte.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val SelectedField = Color(0xFF7c7c7c)
-val UnselectedField = Color(0xFF4a4a4a)
+val UnselectedField = Color(0xFF7c7c7c)
+val SelectedField = Color(0xFF4a4a4a)
 
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)

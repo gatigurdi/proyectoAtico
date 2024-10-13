@@ -5,8 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
-import com.gurdiel.gestiondesoporte.data.AuthService
+import com.gurdiel.gestiondesoporte.data.network.AuthService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,10 +15,11 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
 
-    private val authService:AuthService
+    private val authService: AuthService
 
 
 ) : ViewModel() {
+
 
     private val _email = MutableLiveData<String>()
     val email: LiveData<String> = _email
@@ -41,12 +41,25 @@ class LoginViewModel @Inject constructor(
         _loginEnable.value = isValidEmail(email) && isValidPassword(password)
     }
 
+    fun isLogin(): Boolean {
+        var isLogin = false
+
+        viewModelScope.launch {
+            if(authService.currentUser()!=null){
+                isLogin = true
+            }
+
+        }
+        return isLogin
+    }
+
     fun login(email: String, password: String, navigateToDetail: () -> Unit){
 
         viewModelScope.launch {
 
             val result = withContext(Dispatchers.IO){
                 authService.login(email,password)
+                //val id = authService.currentUser()?.uid
             }
             if (result!=null){
 

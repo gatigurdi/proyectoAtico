@@ -11,11 +11,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.gurdiel.gestiondesoporte.navigation.NavigationWrapper
 import com.gurdiel.gestiondesoporte.presentacion.login.LoginViewModel
+import com.gurdiel.gestiondesoporte.presentacion.registro.RegistroViewModel
 import com.gurdiel.gestiondesoporte.ui.theme.GestionDeSoporteTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,14 +21,13 @@ import dagger.hilt.android.AndroidEntryPoint
 class SplashActivity : ComponentActivity() {
 
     private val loginViewModel: LoginViewModel by viewModels()
-    private lateinit var auth: FirebaseAuth
+    private val registroViewModel: RegistroViewModel by viewModels()
 
 
     private lateinit var navHostController: NavHostController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        auth = Firebase.auth
         enableEdgeToEdge()
         setContent {
 
@@ -39,7 +36,7 @@ class SplashActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background){
 
-                    NavigationWrapper(navHostController,loginViewModel,auth)
+                    NavigationWrapper(navHostController,loginViewModel,registroViewModel)
 
                 }
             }
