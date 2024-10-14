@@ -43,6 +43,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.gurdiel.gestiondesoporte.R
 import com.gurdiel.gestiondesoporte.ui.theme.SelectedField
 import com.gurdiel.gestiondesoporte.ui.theme.UnselectedField
@@ -52,7 +53,10 @@ import com.gurdiel.gestiondesoporte.ui.theme.claroGrisM
 import com.gurdiel.gestiondesoporte.ui.theme.oscuroGrisM
 
 @Composable
-fun RegistroScreen(registroViewModel: RegistroViewModel, navigateToLogin: () -> Unit) {
+fun RegistroScreen(
+    navigateToLogin: () -> Unit,
+    registroViewModel: RegistroViewModel = hiltViewModel()
+) {
 
     val nombre: String by registroViewModel.nombre.observeAsState(initial = "")
     val showConfirmacion by registroViewModel.showConfirm.observeAsState(false)
@@ -101,6 +105,7 @@ fun RegistroScreen(registroViewModel: RegistroViewModel, navigateToLogin: () -> 
 //            fontWeight = FontWeight.Bold,
 //            modifier = Modifier.align(Alignment.Start)
 //        )
+
         dialogo(
             showConfirmacion,
             onDismiss = { registroViewModel.onConfirmacionCerrar(navigateToLogin) })

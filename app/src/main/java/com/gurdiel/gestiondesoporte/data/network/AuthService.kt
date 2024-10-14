@@ -26,5 +26,9 @@ class AuthService @Inject constructor(
 
     }
 
+    fun logout() {
+        firebaseAuth.signOut()
+    }
+
 
 }

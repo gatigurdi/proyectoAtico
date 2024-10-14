@@ -46,10 +46,7 @@ import com.gurdiel.gestiondesoporte.ui.theme.claroGrisM
 import com.gurdiel.gestiondesoporte.ui.theme.oscuroGrisM
 
 @Composable
-fun LoginScreen(
-    loginViewModel: LoginViewModel,
-    navigateToAdministrador: () -> Unit
-) {
+fun LoginScreen(loginViewModel: LoginViewModel, navigateToDetail: (String) -> Unit) {
 
     val email :String by loginViewModel.email.observeAsState(initial = "")
     val password :String by loginViewModel.password.observeAsState(initial = "")
@@ -180,8 +177,8 @@ fun LoginScreen(
         Spacer(modifier = Modifier.weight(0.25f))
 
         Button(
-            onClick = {
-                loginViewModel.login(email,password,navigateToAdministrador) },
+            onClick = { loginViewModel.login(email,password, navigateToDetail) },
+
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp),
@@ -200,3 +197,4 @@ fun LoginScreen(
     }
 
 }
+

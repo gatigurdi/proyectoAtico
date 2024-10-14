@@ -2,7 +2,7 @@ package com.gurdiel.gestiondesoporte.presentacion.model
 
 data class Usuario(
 
-    val id: String = System.currentTimeMillis().hashCode().toString(),
+    val id: String,
     val nombre: String,
     val email: String,
     val date: Long = System.currentTimeMillis(),

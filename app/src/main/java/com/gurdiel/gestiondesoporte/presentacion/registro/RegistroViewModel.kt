@@ -63,19 +63,21 @@ class RegistroViewModel @Inject constructor(
 
         viewModelScope.launch {
 
-            val registroR = withContext(Dispatchers.IO){
-
-                dbService.registrarUsuario(Usuario(nombre = nombre, email = email))
-
-            }
             val authR = withContext(Dispatchers.IO){
 
                 authService.register(email, password)
 
             }
-            Log.i("email", authR?.email.toString())
-            if(authR!=null && registroR!=null){
-                Log.i("EstaLogueado", authService.currentUser()?.email.toString())
+            val id = authService.currentUser()?.uid.toString()
+
+            val registroR = withContext(Dispatchers.IO){
+
+                dbService.registrarUsuario(Usuario(id = id, nombre = nombre, email = email))
+
+            }
+
+            if(authR!=null){
+
                 _showConfirm.value = true
 
             }else{

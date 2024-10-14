@@ -5,28 +5,34 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.gurdiel.gestiondesoporte.presentacion.detail.administrador.Administrador
+import com.gurdiel.gestiondesoporte.presentacion.detail.empresa.EmpresaScreen
+import com.gurdiel.gestiondesoporte.presentacion.detail.tecnico.TecnicoScreen
 import com.gurdiel.gestiondesoporte.presentacion.inicio.InicioScreen
 import com.gurdiel.gestiondesoporte.presentacion.login.LoginScreen
 import com.gurdiel.gestiondesoporte.presentacion.login.LoginViewModel
 import com.gurdiel.gestiondesoporte.presentacion.registro.RegistroScreen
-import com.gurdiel.gestiondesoporte.presentacion.registro.RegistroViewModel
+
 
 @Composable
 fun NavigationWrapper(
     navHostController: NavHostController,
     loginViewModel: LoginViewModel,
-    registroViewModel: RegistroViewModel
     ) {
-    var start= "inicio"
-
-    //Esto puede venir del login cuando creemos los tres tipos de usuario probamos.
 
     if(loginViewModel.isLogin()){
-        start = "Administrador"
+        val usuario = loginViewModel.iniciada()
+        if (usuario != null) {
+            loginViewModel.logininiciada(usuario.uid) { destino ->
+                navHostController.navigate(
+                    destino
+                )
+            }
+        }
     }
 
-    NavHost(navController = navHostController, startDestination = start) {
-        composable("inicio") {
+    NavHost(navController = navHostController, startDestination = "Inicio") {
+
+        composable("Inicio") {
             InicioScreen(
                 navigateToLogin = { navHostController.navigate("Login") },
                 navigateToRegistro = { navHostController.navigate("Registro") }
@@ -34,14 +40,42 @@ fun NavigationWrapper(
         }
         composable("Registro") {
             RegistroScreen(
-                registroViewModel,
-                navigateToLogin = {navHostController.navigate("Login")}) }
+                navigateToLogin = { navHostController.navigate("Login") }) }
+
         composable("Login") {
             LoginScreen(
-                loginViewModel,
-                navigateToAdministrador = { navHostController.navigate("Administrador")}) }
+                loginViewModel = loginViewModel,
+                navigateToDetail = { destino -> navHostController.navigate(destino)}
+            ) }
 
-        composable("Administrador") { Administrador()  }
+        composable("ADMINISTRADOR") {
+            Administrador(
+
+                navigateToLogin = {
+                    navHostController.navigate("Login"){
+                        popUpTo(navHostController.graph.startDestinationId){
+                            inclusive = true
+                        } } }
+            )
+        }
+        composable("TECNICO") {
+            TecnicoScreen(
+                navigateToLogin = {
+                    navHostController.navigate("Login"){
+                        popUpTo(navHostController.graph.startDestinationId){
+                            inclusive = true
+                        } } }
+            )
+        }
+        composable("EMPRESA") {
+            EmpresaScreen(
+                navigateToLogin = {
+                    navHostController.navigate("Login"){
+                        popUpTo(navHostController.graph.startDestinationId){
+                            inclusive = true
+                        } } }
+            )
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-package com.gurdiel.gestiondesoporte.presentacion.detail.administrador
+package com.gurdiel.gestiondesoporte.presentacion.detail.empresa
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -17,15 +17,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.gurdiel.gestiondesoporte.presentacion.detail.administrador.AdministradorViewModel
 import com.gurdiel.gestiondesoporte.ui.theme.amarilloM
 import com.gurdiel.gestiondesoporte.ui.theme.azulM
 import com.gurdiel.gestiondesoporte.ui.theme.claroGrisM
 import com.gurdiel.gestiondesoporte.ui.theme.oscuroGrisM
 
 @Composable
-fun Administrador(
+fun EmpresaScreen(
     navigateToLogin: () -> Unit,
-    administradorViewModel: AdministradorViewModel = hiltViewModel()
+    empresaViewModel: EmpresaViewModel = hiltViewModel()
 ){
     
     Column(modifier = Modifier
@@ -38,9 +39,9 @@ fun Administrador(
             )
         )
         .padding(horizontal = 32.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "Hola hemos accedido")
+        Text(text = "Hola hemos accedido a EMPRESA")
         Button(
-            onClick = { administradorViewModel.logout { navigateToLogin() } },
+            onClick = { empresaViewModel.logout { navigateToLogin() }},
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp),

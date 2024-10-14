@@ -39,6 +39,17 @@ class DbService @Inject constructor(
 
     }
 
+    suspend fun getUnUsuario(id:String): Usuario? {
+
+        return   db
+            .collection(USUARIOS_PATH)
+            .document(id)
+            .get()
+            .await()
+            .toObject(UsuarioResponse::class.java)?.toDomain()
+
+    }
+
     suspend fun getAverias():List<String>{
         //Me busca dentro de una colecion y dentro de otra.
        return db
@@ -49,7 +60,6 @@ class DbService @Inject constructor(
     }
 
     fun registrarUsuario(usuarioModel:Usuario):Boolean {
-        Log.i("llego", "llego aquó1")
 
         val usuario = hashMapOf(
             "id" to usuarioModel.id,
@@ -60,7 +70,7 @@ class DbService @Inject constructor(
             "averiasCreadas" to usuarioModel.averiasCreadas,
             "averiasAsignadas" to usuarioModel.averiasAsignadas
         )
-        Log.i("llego", "llego aqu2ó")
+
         return db.collection(USUARIOS_PATH).document(usuarioModel.id).set(usuario).isSuccessful
     }
 
