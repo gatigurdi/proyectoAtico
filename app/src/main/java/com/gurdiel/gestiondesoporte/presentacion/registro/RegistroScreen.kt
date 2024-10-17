@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gurdiel.gestiondesoporte.R
+import com.gurdiel.gestiondesoporte.domain.model.Rol
 import com.gurdiel.gestiondesoporte.ui.theme.SelectedField
 import com.gurdiel.gestiondesoporte.ui.theme.UnselectedField
 import com.gurdiel.gestiondesoporte.ui.theme.amarilloM
@@ -106,7 +107,7 @@ fun RegistroScreen(
 //            modifier = Modifier.align(Alignment.Start)
 //        )
 
-        dialogo(
+        Dialogo(
             showConfirmacion,
             onDismiss = { registroViewModel.onConfirmacionCerrar(navigateToLogin) })
         OutlinedTextField(
@@ -166,7 +167,7 @@ fun RegistroScreen(
                 focusedContainerColor = SelectedField,
                 focusedTextColor = Color.White
             ),
-            trailingIcon = @androidx.compose.runtime.Composable {
+            trailingIcon = @Composable {
                 if (showPassword) {
                     IconButton(onClick = { showPassword = false }) {
                         Icon(
@@ -201,7 +202,7 @@ fun RegistroScreen(
 
         Button(
             onClick = {
-                registroViewModel.registro(nombre,email,password)
+                registroViewModel.registro(nombre,email,password, Rol.EMPRESA)
             },
             modifier = Modifier
                 .fillMaxWidth()
@@ -226,7 +227,7 @@ fun RegistroScreen(
 }
 
 @Composable
-fun dialogo(showConfirmacion: Boolean, onDismiss: () -> Unit) {
+fun Dialogo(showConfirmacion: Boolean, onDismiss: () -> Unit) {
 
     if (showConfirmacion) {
 

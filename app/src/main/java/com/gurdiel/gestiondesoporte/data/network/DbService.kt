@@ -1,23 +1,22 @@
 package com.gurdiel.gestiondesoporte.data.network
 
-import android.util.Log
-import androidx.compose.ui.input.key.Key.Companion.U
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.gurdiel.gestiondesoporte.data.response.AveriasResponse
 import com.gurdiel.gestiondesoporte.data.response.UsuarioResponse
-import com.gurdiel.gestiondesoporte.presentacion.model.Usuario
+import com.gurdiel.gestiondesoporte.domain.model.Usuario
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class DbService @Inject constructor(
-    private val db: FirebaseFirestore
+    private val db: FirebaseFirestore,
 ) {
 
     companion object {
         const val USUARIOS_PATH = "usuarios"
         const val AVERIAS_PATH = "averias"
         const val AVERIAS_USUARIO_DOCUMENT = "averiasCreadas"
+        const val FECHA = "date"
 
     }
 
@@ -26,6 +25,24 @@ class DbService @Inject constructor(
             usuario.toObject(UsuarioResponse::class.java).toDomain()
         }
     }
+
+
+//    fun getUsuarios(): Flow<List<Usuario>> {
+//        return db
+//            .collection(USUARIOS_PATH)
+//            .orderBy(FECHA, Query.Direction.DESCENDING)
+//            .snapshots()
+//            .map { qs -> qs.toObjects(UsuarioResponse::class.java).mapNotNull {
+//                usuarioResponse -> usuarioToDomain(usuarioResponse)
+//            } }
+//    }
+
+//    fun usuarioToDomain(usuarioResponse: UsuarioResponse):Usuario?{
+//
+//        if (usuarioResponse.)
+//
+//        return null
+//    }
 
     suspend fun getLastUsuario(): Usuario? {
 
@@ -59,7 +76,7 @@ class DbService @Inject constructor(
             .toObject(AveriasResponse::class.java)?.ids ?: emptyList()
     }
 
-    fun registrarUsuario(usuarioModel:Usuario):Boolean {
+    fun registrarUsuario(usuarioModel: Usuario):Boolean {
 
         val usuario = hashMapOf(
             "id" to usuarioModel.id,

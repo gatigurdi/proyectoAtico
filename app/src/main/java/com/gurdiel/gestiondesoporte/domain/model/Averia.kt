@@ -1,4 +1,4 @@
-package com.gurdiel.gestiondesoporte.presentacion.model
+package com.gurdiel.gestiondesoporte.domain.model
 
 data class Averia(
 

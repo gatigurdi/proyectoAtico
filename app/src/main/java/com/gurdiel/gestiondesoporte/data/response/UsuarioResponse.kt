@@ -1,14 +1,14 @@
 package com.gurdiel.gestiondesoporte.data.response
 
-import com.gurdiel.gestiondesoporte.presentacion.model.Averia
-import com.gurdiel.gestiondesoporte.presentacion.model.Usuario
+import com.gurdiel.gestiondesoporte.domain.model.Rol
+import com.gurdiel.gestiondesoporte.domain.model.Usuario
 
-data class UsuarioResponse (
+data class UsuarioResponse(
     val id: String = "",
     val nombre: String = "",
     val email: String = "",
     val date: Long = 1,
-    val rol: String = "",
+    val rol: Rol = Rol.EMPRESA,
     val averiasCreadas: List<String> = emptyList(),
     val averiasAsignadas: List<String> = emptyList()
 ){
@@ -24,3 +24,5 @@ data class UsuarioResponse (
         )
     }
 }
+
+

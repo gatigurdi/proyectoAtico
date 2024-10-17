@@ -8,7 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gurdiel.gestiondesoporte.data.network.AuthService
 import com.gurdiel.gestiondesoporte.data.network.DbService
-import com.gurdiel.gestiondesoporte.presentacion.model.Usuario
+import com.gurdiel.gestiondesoporte.domain.model.Rol
+import com.gurdiel.gestiondesoporte.domain.model.Usuario
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,6 +50,7 @@ class RegistroViewModel @Inject constructor(
 //    fun onMostrarConfirmacionClick(){
 //        _showConfirm.value = true
 //    }
+
     fun onConfirmacionCerrar(navigateToLogin: () -> Unit) {
         //una vez confirmamos el mensaje de registro nos lleva al login
         navigateToLogin()
@@ -59,20 +61,13 @@ class RegistroViewModel @Inject constructor(
     private fun isValidEmail(email: String): Boolean  = Patterns.EMAIL_ADDRESS.matcher(email).matches()
     private fun isValidPassword(password: String): Boolean = password.length > 5
 
-    fun registro(nombre: String,email: String,password: String) {
+    fun registro(nombre: String, email: String, password: String, rol: Rol) {
 
         viewModelScope.launch {
 
             val authR = withContext(Dispatchers.IO){
 
                 authService.register(email, password)
-
-            }
-            val id = authService.currentUser()?.uid.toString()
-
-            val registroR = withContext(Dispatchers.IO){
-
-                dbService.registrarUsuario(Usuario(id = id, nombre = nombre, email = email))
 
             }
 

@@ -9,28 +9,19 @@ import com.gurdiel.gestiondesoporte.presentacion.detail.empresa.EmpresaScreen
 import com.gurdiel.gestiondesoporte.presentacion.detail.tecnico.TecnicoScreen
 import com.gurdiel.gestiondesoporte.presentacion.inicio.InicioScreen
 import com.gurdiel.gestiondesoporte.presentacion.login.LoginScreen
-import com.gurdiel.gestiondesoporte.presentacion.login.LoginViewModel
 import com.gurdiel.gestiondesoporte.presentacion.registro.RegistroScreen
 
 
 @Composable
 fun NavigationWrapper(
-    navHostController: NavHostController,
-    loginViewModel: LoginViewModel,
+    navHostController: NavHostController,// Single source of truth
+    destino: String
+) {
+
+    NavHost(
+        navController = navHostController,
+        startDestination = destino
     ) {
-
-    if(loginViewModel.isLogin()){
-        val usuario = loginViewModel.iniciada()
-        if (usuario != null) {
-            loginViewModel.logininiciada(usuario.uid) { destino ->
-                navHostController.navigate(
-                    destino
-                )
-            }
-        }
-    }
-
-    NavHost(navController = navHostController, startDestination = "Inicio") {
 
         composable("Inicio") {
             InicioScreen(
@@ -40,42 +31,48 @@ fun NavigationWrapper(
         }
         composable("Registro") {
             RegistroScreen(
-                navigateToLogin = { navHostController.navigate("Login") }) }
+                navigateToLogin = { navHostController.navigate("Login") })
+        }
 
         composable("Login") {
             LoginScreen(
-                loginViewModel = loginViewModel,
-                navigateToDetail = { destino -> navHostController.navigate(destino)}
-            ) }
+                navigateToDetail = { destino -> navHostController.navigate(destino) }
+            )
+        }
 
         composable("ADMINISTRADOR") {
             Administrador(
 
                 navigateToLogin = {
-                    navHostController.navigate("Login"){
-                        popUpTo(navHostController.graph.startDestinationId){
+                    navHostController.navigate("Login") {
+                        popUpTo(navHostController.graph.startDestinationId) {
                             inclusive = true
-                        } } }
+                        }
+                    }
+                }
             )
         }
         composable("TECNICO") {
             TecnicoScreen(
                 navigateToLogin = {
-                    navHostController.navigate("Login"){
-                        popUpTo(navHostController.graph.startDestinationId){
+                    navHostController.navigate("Login") {
+                        popUpTo(navHostController.graph.startDestinationId) {
                             inclusive = true
-                        } } }
+                        }
+                    }
+                }
             )
         }
         composable("EMPRESA") {
             EmpresaScreen(
                 navigateToLogin = {
-                    navHostController.navigate("Login"){
-                        popUpTo(navHostController.graph.startDestinationId){
+                    navHostController.navigate("Login") {
+                        popUpTo(navHostController.graph.startDestinationId) {
                             inclusive = true
-                        } } }
+                        }
+                    }
+                }
             )
         }
     }
-
 }

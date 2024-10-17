@@ -37,6 +37,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.gurdiel.gestiondesoporte.R
 import com.gurdiel.gestiondesoporte.ui.theme.SelectedField
 import com.gurdiel.gestiondesoporte.ui.theme.UnselectedField
@@ -46,7 +47,7 @@ import com.gurdiel.gestiondesoporte.ui.theme.claroGrisM
 import com.gurdiel.gestiondesoporte.ui.theme.oscuroGrisM
 
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel, navigateToDetail: (String) -> Unit) {
+fun LoginScreen(navigateToDetail: (String) -> Unit, loginViewModel: LoginViewModel = hiltViewModel()) {
 
     val email :String by loginViewModel.email.observeAsState(initial = "")
     val password :String by loginViewModel.password.observeAsState(initial = "")

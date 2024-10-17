@@ -41,7 +41,6 @@ fun InicioScreen(navigateToLogin: ()-> Unit, navigateToRegistro: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-
         Spacer(modifier = Modifier.weight(0.5f))
         Image(
             painter = painterResource(id = R.drawable.averia),
@@ -86,7 +85,6 @@ fun InicioScreen(navigateToLogin: ()-> Unit, navigateToRegistro: () -> Unit) {
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-
     }
 
 }
