@@ -2,8 +2,9 @@ package com.gurdiel.gestiondesoporte.data.network
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.gurdiel.gestiondesoporte.data.response.AveriasResponse
+import com.gurdiel.gestiondesoporte.data.response.AveriaResponse
 import com.gurdiel.gestiondesoporte.data.response.UsuarioResponse
+import com.gurdiel.gestiondesoporte.domain.model.Averia
 import com.gurdiel.gestiondesoporte.domain.model.Usuario
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -21,8 +22,15 @@ class DbService @Inject constructor(
     }
 
     suspend fun getAllUsuarios(): List<Usuario> {
-        return db.collection("usuarios").get().await().map { usuario ->
+
+        return db.collection(USUARIOS_PATH).get().await().map { usuario ->
             usuario.toObject(UsuarioResponse::class.java).toDomain()
+        }
+    }
+    suspend fun getAllAverias(): List<Averia> {
+
+        return db.collection(AVERIAS_PATH).get().await().map { averia ->
+            averia.toObject(AveriaResponse::class.java).toDomain()
         }
     }
 
@@ -67,20 +75,19 @@ class DbService @Inject constructor(
 
     }
 
-    suspend fun getAverias():List<String>{
+    suspend fun getAveriasUsuario(id:String): List<String> {
         //Me busca dentro de una colecion y dentro de otra.
        return db
-            .collection(AVERIAS_PATH)
-            .document(AVERIAS_USUARIO_DOCUMENT)
-            .get().await()
-            .toObject(AveriasResponse::class.java)?.ids ?: emptyList()
+           .collection(USUARIOS_PATH)
+           .document(id)
+           .get().await().data?.get(AVERIAS_USUARIO_DOCUMENT) as? List<String> ?: emptyList()
     }
 
     fun registrarUsuario(usuarioModel: Usuario):Boolean {
 
         val usuario = hashMapOf(
             "id" to usuarioModel.id,
-            "name" to usuarioModel.nombre,
+            "name" to usuarioModel.name,
             "email" to usuarioModel.email,
             "rol" to usuarioModel.rol,
             "fecha" to usuarioModel.date,

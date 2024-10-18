@@ -6,11 +6,11 @@ data class Averia(
     val titulo: String,
     val descripcion: String,
     val tipoAveria: TipoAveria,
-    val date: String,
-    val prioridad: String,
+    val date: Long,
+    val prioridad: Prioridad,
     val estado: String,
-    val usuarioCreador: Usuario,
-    val tecnico: Usuario
+    val usuarioCreador: String,
+    val tecnico: String
 
 )
 

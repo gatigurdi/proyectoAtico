@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.gurdiel.gestiondesoporte.presentacion.detail.administrador.Administrador
+import com.gurdiel.gestiondesoporte.presentacion.detail.administrador.AdministradorScreen
 import com.gurdiel.gestiondesoporte.presentacion.detail.empresa.EmpresaScreen
 import com.gurdiel.gestiondesoporte.presentacion.detail.tecnico.TecnicoScreen
 import com.gurdiel.gestiondesoporte.presentacion.inicio.InicioScreen
@@ -41,7 +41,7 @@ fun NavigationWrapper(
         }
 
         composable("ADMINISTRADOR") {
-            Administrador(
+            AdministradorScreen(
 
                 navigateToLogin = {
                     navHostController.navigate("Login") {

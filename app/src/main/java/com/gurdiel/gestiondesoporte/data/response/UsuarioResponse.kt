@@ -5,7 +5,7 @@ import com.gurdiel.gestiondesoporte.domain.model.Usuario
 
 data class UsuarioResponse(
     val id: String = "",
-    val nombre: String = "",
+    val name: String = "",
     val email: String = "",
     val date: Long = 1,
     val rol: Rol = Rol.EMPRESA,
@@ -15,7 +15,7 @@ data class UsuarioResponse(
     fun toDomain(): Usuario {
         return Usuario(
             id = id,
-            nombre = nombre,
+            name = name,
             email = email,
             date = date,
             rol = rol,

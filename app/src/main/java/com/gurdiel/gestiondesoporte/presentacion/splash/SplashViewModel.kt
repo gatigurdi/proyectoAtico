@@ -27,12 +27,12 @@ class SplashViewModel @Inject constructor(
         viewModelScope.launch {
             if(authService.currentUser()!=null){
                 val usuario = async { db.getUnUsuario(authService.currentUser()!!.uid)}.await()
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            destino = usuario!!.rol.toString(),
-                            currentUser = usuario)
-                    }
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        destino = usuario!!.rol.toString(),
+                        currentUser = usuario)
+                }
             }else{
                 _uiState.update { it.copy(
                     isLoading = false

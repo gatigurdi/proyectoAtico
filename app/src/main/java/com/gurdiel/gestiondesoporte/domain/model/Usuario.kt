@@ -3,7 +3,7 @@ package com.gurdiel.gestiondesoporte.domain.model
 data class Usuario(
 
     val id: String,
-    val nombre: String,
+    val name: String,
     val email: String,
     val date: Long = System.currentTimeMillis(),
     val rol: Rol,
