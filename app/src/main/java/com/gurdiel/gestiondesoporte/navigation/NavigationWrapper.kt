@@ -42,7 +42,10 @@ fun NavigationWrapper(
 
         composable("ADMINISTRADOR") {
             AdministradorScreen(
+                navigateTo = {
+                    destino -> navHostController.navigate(destino)
 
+                },
                 navigateToLogin = {
                     navHostController.navigate("Login") {
                         popUpTo(navHostController.graph.startDestinationId) {
@@ -50,6 +53,7 @@ fun NavigationWrapper(
                         }
                     }
                 }
+
             )
         }
         composable("TECNICO") {

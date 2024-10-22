@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gurdiel.gestiondesoporte.R
-import com.gurdiel.gestiondesoporte.domain.model.Rol
 import com.gurdiel.gestiondesoporte.ui.theme.SelectedField
 import com.gurdiel.gestiondesoporte.ui.theme.UnselectedField
 import com.gurdiel.gestiondesoporte.ui.theme.amarilloM
@@ -202,7 +201,7 @@ fun RegistroScreen(
 
         Button(
             onClick = {
-                registroViewModel.registro(nombre,email,password, Rol.EMPRESA)
+                registroViewModel.registro(nombre,email,password, "EMPRESA")
             },
             modifier = Modifier
                 .fillMaxWidth()

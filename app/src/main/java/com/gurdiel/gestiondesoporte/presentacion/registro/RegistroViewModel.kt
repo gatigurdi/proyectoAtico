@@ -61,7 +61,10 @@ class RegistroViewModel @Inject constructor(
     private fun isValidEmail(email: String): Boolean  = Patterns.EMAIL_ADDRESS.matcher(email).matches()
     private fun isValidPassword(password: String): Boolean = password.length > 5
 
-    fun registro(nombre: String, email: String, password: String, rol: Rol) {
+    fun registro(nombre: String, email: String, password: String, rol: String) {
+
+        var rol:Rol = recuperarRol(rol)
+        var usuario:Usuario
 
         viewModelScope.launch {
 
@@ -72,7 +75,9 @@ class RegistroViewModel @Inject constructor(
             }
 
             if(authR!=null){
-
+                val id = authService.currentUser()!!.uid
+                usuario = Usuario(id,name = nombre,email= email, rol = rol)
+                dbService.registrarUsuario(usuario)
                 _showConfirm.value = true
 
             }else{
@@ -80,6 +85,12 @@ class RegistroViewModel @Inject constructor(
             }
         }
 
+    }
+
+    private fun recuperarRol(rol: String): Rol {
+
+
+        return Rol.EMPRESA
     }
 
 }
