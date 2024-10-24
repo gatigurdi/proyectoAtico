@@ -1,6 +1,7 @@
 package com.gurdiel.gestiondesoporte.data.response
 
 import com.gurdiel.gestiondesoporte.domain.model.Averia
+import com.gurdiel.gestiondesoporte.domain.model.Estado
 import com.gurdiel.gestiondesoporte.domain.model.Prioridad
 import com.gurdiel.gestiondesoporte.domain.model.TipoAveria
 
@@ -11,7 +12,7 @@ data class AveriaResponse(
     val tipoAveria: TipoAveria = TipoAveria.SOFTWARE,
     val date: Long = 1,
     val prioridad: Prioridad = Prioridad.BAJA,
-    val estado: String = "",
+    val estado: Estado = Estado.CREADA,
     val usuarioCreador: String = "",
     val tecnico: String = ""
 ){

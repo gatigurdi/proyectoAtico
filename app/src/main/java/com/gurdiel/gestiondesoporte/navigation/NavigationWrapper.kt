@@ -29,6 +29,7 @@ fun NavigationWrapper(
                 navigateToRegistro = { navHostController.navigate("Registro") }
             )
         }
+
         composable("Registro") {
             RegistroScreen(
                 navigateToLogin = { navHostController.navigate("Login") })
@@ -42,10 +43,6 @@ fun NavigationWrapper(
 
         composable("ADMINISTRADOR") {
             AdministradorScreen(
-                navigateTo = {
-                    destino -> navHostController.navigate(destino)
-
-                },
                 navigateToLogin = {
                     navHostController.navigate("Login") {
                         popUpTo(navHostController.graph.startDestinationId) {
@@ -53,9 +50,9 @@ fun NavigationWrapper(
                         }
                     }
                 }
-
             )
         }
+
         composable("TECNICO") {
             TecnicoScreen(
                 navigateToLogin = {
@@ -67,6 +64,7 @@ fun NavigationWrapper(
                 }
             )
         }
+
         composable("EMPRESA") {
             EmpresaScreen(
                 navigateToLogin = {

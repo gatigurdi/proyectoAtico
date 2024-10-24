@@ -1,14 +1,19 @@
 package com.gurdiel.gestiondesoporte.presentacion.detail.administrador
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
@@ -16,17 +21,24 @@ import androidx.compose.material.icons.filled.Build
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -35,31 +47,44 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.gurdiel.gestiondesoporte.R
 import com.gurdiel.gestiondesoporte.domain.model.Averia
 import com.gurdiel.gestiondesoporte.domain.model.Rol
 import com.gurdiel.gestiondesoporte.domain.model.Usuario
 import com.gurdiel.gestiondesoporte.presentacion.detail.AveriasShow
 import com.gurdiel.gestiondesoporte.presentacion.detail.UsuariosShow
+import com.gurdiel.gestiondesoporte.presentacion.registro.Dialogo
+import com.gurdiel.gestiondesoporte.ui.theme.SelectedField
+import com.gurdiel.gestiondesoporte.ui.theme.UnselectedField
 import com.gurdiel.gestiondesoporte.ui.theme.amarilloM
 import com.gurdiel.gestiondesoporte.ui.theme.azulM
 import com.gurdiel.gestiondesoporte.ui.theme.claroGrisM
+import com.gurdiel.gestiondesoporte.ui.theme.oscuroGrisM
 import com.gurdiel.gestiondesoporte.ui.theme.verdeM
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AdministradorScreen(
-    navigateTo: (String) -> Unit,
-    navigateToLogin: () -> Unit,
+    navigateToLogin: () -> Unit,//BOTON LOGOUT SALIR A LA PANTALLA DE LOGIN
     administradorViewModel: AdministradorViewModel = hiltViewModel()
 ) {
-    val showDialogo: Boolean by administradorViewModel.showDialogo.observeAsState(false)
+    val showDialogoUsuario: Boolean by administradorViewModel.showDialogoUsuario.observeAsState(false)
+    val showDialogoAveria: Boolean by administradorViewModel.showDialogoAveria.observeAsState(false)
+    val uiState by administradorViewModel.uiState.collectAsState()
 
     val items = listOf(
         BottomNavigationItem(
@@ -76,13 +101,10 @@ fun AdministradorScreen(
         )
     )
 
-    var selectedItemIndex by rememberSaveable {
-        mutableStateOf(0)
-    }
-
+    var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
 
     Scaffold(
-        floatingActionButton = { agregarBtn(selectedItemIndex, administradorViewModel) },
+        floatingActionButton = { AgregarBtn(selectedItemIndex, administradorViewModel) },
         floatingActionButtonPosition = FabPosition.Center,
 
         bottomBar = {
@@ -90,24 +112,21 @@ fun AdministradorScreen(
                 items.forEachIndexed { index, item ->
                     NavigationBarItem(
                         selected = selectedItemIndex == index,
-                        onClick = {
-                            selectedItemIndex = index
-                        },
+                        onClick = { selectedItemIndex = index },
                         label = { Text(text = item.title) },
                         icon = {
                             BadgedBox(badge = {
                                 if (item.hasNews) {
                                     Badge()
                                 }
-
-                            }) {
+                            })
+                            {
                                 Icon(
                                     imageVector = if (index == selectedItemIndex) {
                                         item.selectedIcon
                                     } else item.unslectedIcon,
                                     contentDescription = item.title
                                 )
-
                             }
                         })
                 }
@@ -127,68 +146,62 @@ fun AdministradorScreen(
                 .fillMaxSize()
         ) {
             AddUsuarioDialogo(
-                showDialogo,
+                showDialogoUsuario,
                 onDismiss = { administradorViewModel.onDialogoCerrarUsuario() },
-                onUsuarioAdd = { administradorViewModel.onUsuarioNew(it) }
+                administradorViewModel = administradorViewModel
+            )
+            AddAveriaDialogo(
+                showDialogoAveria,
+                onDismiss = { administradorViewModel.onDialogoCerrarAveria() },
+                administradorViewModel = administradorViewModel
             )
             if (selectedItemIndex == 0) {
-                UsuariosShow(administradorViewModel)
-            } else AveriasShow(administradorViewModel)
+                UsuariosShow(uiState.usuarios)
+            } else AveriasShow(uiState.averias)
         }
 
 
     }
 }
 
+
+
 @Composable
-fun AddUsuarioDialogo(
-    showDialogo: Boolean,
-    onDismiss: () -> Unit,
-    onUsuarioAdd: (Usuario) -> Unit
-) {
+fun RadioButtonRol(): Rol {
 
-    var miTarea by remember { mutableStateOf("") }
-    var usuario: Usuario = Usuario(id = "s", name = "", email = "", rol = Rol.EMPRESA)
-
-    if(showDialogo) {
-        Dialog(onDismissRequest = { onDismiss }) {
-
-            Column(
+    val radioOptions = listOf(Rol.EMPRESA, Rol.TECNICO, Rol.ADMINISTRADOR)
+    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[0]) }
+    Column {
+        radioOptions.forEach { text ->
+            Row(
                 Modifier
                     .fillMaxWidth()
-                    .background(Color.White)
-                    .padding(16.dp)
+                    .selectable(
+                        selected = (text == selectedOption),
+                        onClick = {
+                            onOptionSelected(text)
+                        }
+                    )
+                    .padding(horizontal = 16.dp)
             ) {
+                RadioButton(
+                    selected = (text == selectedOption),
+                    onClick = { onOptionSelected(text) }
+                )
                 Text(
-                    text = "Recordarme de...",
-                    fontSize = 18.sp,
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    fontWeight = FontWeight.Bold
+                    text = text.toString(),
+                    style = MaterialTheme.typography.bodyMedium.merge(),
+                    modifier = Modifier.padding(start = 8.dp, top = 14.dp)
                 )
-                Spacer(modifier = Modifier.size(16.dp))
-                TextField(
-                    value = miTarea,
-                    onValueChange = { miTarea = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    singleLine = true,
-                    maxLines = 1
-                )
-                Spacer(modifier = Modifier.size(16.dp))
-                Button(onClick = {
-                    onUsuarioAdd(usuario)
-                    miTarea = ""
-                }, modifier = Modifier.fillMaxWidth()) {
-                    Text(text = "Añadir tú tarea.")
-                }
             }
-
         }
     }
-
+    return selectedOption
 }
 
+
 @Composable
-fun agregarBtn(selectedItemIndex: Int, administradorViewModel: AdministradorViewModel) {
+fun AgregarBtn(selectedItemIndex: Int, administradorViewModel: AdministradorViewModel) {
 
     FloatingActionButton(
         onClick = {
@@ -204,64 +217,6 @@ fun agregarBtn(selectedItemIndex: Int, administradorViewModel: AdministradorView
     }
 
 }
-
-
-@Composable
-fun AveriasItem(averia: Averia) {
-    ElevatedCard(
-        modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-//                .pointerInput(Unit) {
-//                    detectTapGestures(
-//                        onLongPress = {
-//                            //tareasViewModel.onMostrarConfirmacionClick()
-//                        },
-//                        onDoubleTap = {
-//                            //Viajar a otra pantalla. Con el tareaModel y editarlo.
-//                        })
-//                }
-        elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-            Text(
-                text = averia.titulo, modifier = Modifier
-                    .padding(horizontal = 4.dp)
-            )
-        }
-    }
-
-}
-
-@Composable
-fun UsuarioItem(usuario: Usuario) {
-
-    ElevatedCard(
-        modifier = Modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-//                .pointerInput(Unit) {
-//                    detectTapGestures(
-//                        onLongPress = {
-//                            //tareasViewModel.onMostrarConfirmacionClick()
-//                        },
-//                        onDoubleTap = {
-//                            //Viajar a otra pantalla. Con el tareaModel y editarlo.
-//                        })
-//                }
-        elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-
-            Text(
-                text = usuario.name, modifier = Modifier
-                    .padding(horizontal = 4.dp)
-            )
-        }
-    }
-
-
-}
-
 
 //    val usuariosState = administradorViewModel.usuarios.collectAsState()
 //    val averiasState = administradorViewModel.averias.collectAsState()

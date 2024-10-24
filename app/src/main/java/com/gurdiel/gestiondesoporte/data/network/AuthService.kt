@@ -26,6 +26,12 @@ class AuthService @Inject constructor(
 
     }
 
+    suspend fun crear(email: String, password: String)  {
+
+        firebaseAuth.createUserWithEmailAndPassword(email, password).await().user
+
+    }
+
     fun logout() {
         firebaseAuth.signOut()
     }
