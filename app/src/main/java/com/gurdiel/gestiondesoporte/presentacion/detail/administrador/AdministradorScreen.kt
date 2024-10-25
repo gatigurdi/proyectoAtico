@@ -104,7 +104,7 @@ fun AdministradorScreen(
     var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
 
     Scaffold(
-        floatingActionButton = { AgregarBtn(selectedItemIndex, administradorViewModel) },
+        floatingActionButton = { AgregarBtnA(selectedItemIndex, administradorViewModel) },
         floatingActionButtonPosition = FabPosition.Center,
 
         bottomBar = {
@@ -201,7 +201,7 @@ fun RadioButtonRol(): Rol {
 
 
 @Composable
-fun AgregarBtn(selectedItemIndex: Int, administradorViewModel: AdministradorViewModel) {
+fun AgregarBtnA(selectedItemIndex: Int, administradorViewModel: AdministradorViewModel) {
 
     FloatingActionButton(
         onClick = {
